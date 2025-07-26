@@ -1,0 +1,22 @@
+{
+  "name": "cvbot",
+  "version": "1.0.0",
+  "description": "CV Bot Lambda Web Application",
+  "main": "app.py",
+  "scripts": {
+    "start": "python app.py",
+    "dev": "serverless offline",
+    "deploy": "serverless deploy",
+    "sam-build": "sam build",
+    "sam-local": "sam local start-api",
+    "test": "python -m pytest tests/"
+  },
+  "devDependencies": {
+    "serverless": "^3.0.0",
+    "serverless-offline": "^12.0.0",
+    "serverless-python-requirements": "^5.4.0"
+  },
+  "keywords": ["aws", "lambda", "cv", "resume", "bot"],
+  "author": "",
+  "license": "MIT"
+}

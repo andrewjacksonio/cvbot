@@ -1,0 +1,49 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "ssm:PutParameter",
+                "ssm:DeleteParameter",
+                "ssm:GetParameterHistory",
+                "ssm:DescribeParameters"
+            ],
+            "Resource": [
+                "arn:aws:ssm:us-west-2:097890748571:parameter/cdk-bootstrap/*",
+                "arn:aws:ssm:*:*:parameter/aws/service/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:*",
+                "s3:*",
+                "sts:AssumeRole",
+                "iam:GetRole",
+                "iam:PassRole",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:GetRolePolicy",
+                "iam:TagRole",
+                "iam:UntagRole",
+                "iam:CreatePolicy",
+                "iam:DeletePolicy",
+                "iam:CreateServiceLinkedRole",
+                "lambda:*",
+                "apigateway:*",
+                "logs:*",
+                "events:*",
+                "route53:*",
+                "acm:*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
