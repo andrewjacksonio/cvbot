@@ -1,0 +1,89 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - prod
+          - staging
+      
+      confirm_apply:
+        description: 'Type "apply" to confirm deployment'
+        required: true
+        type: string
+
+env:
+  TF_VERSION: 1.9.2
+
+jobs:
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    
+    # Permissions for AWS access
+    permissions:
+      contents: read
+    
+    defaults:
+      run:
+        working-directory: terraform
+    
+    steps:
+      - name: Validate Input
+        run: |
+          if [ "${{ inputs.confirm_apply }}" != "apply" ]; then
+            echo "❌ Confirmation input must be exactly 'apply'"
+            exit 1
+          fi
+      
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Create terraform.tfvars
+        run: |
+          cat > terraform.tfvars << EOF
+          project_name = "cvbot"
+          environment = "${{ inputs.environment }}"
+          aws_region = "${{ secrets.AWS_REGION }}"
+          bedrock_models = [
+            "amazon.nova-micro-v1",
+            "anthropic.claude-3-sonnet-20240229-v1:0",
+            "amazon.titan-text-express-v1"
+          ]
+          enable_bedrock_logging = true
+          EOF
+      
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+      
+      - name: Terraform Output
+        id: output
+        run: |
+          echo "## Terraform Outputs" >> $GITHUB_STEP_SUMMARY
+          echo "```" >> $GITHUB_STEP_SUMMARY
+          terraform output >> $GITHUB_STEP_SUMMARY
+          echo "```" >> $GITHUB_STEP_SUMMARY
