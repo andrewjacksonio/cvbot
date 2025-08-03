@@ -79,10 +79,20 @@ terraform destroy  # Only after reviewing the destroy plan
 ## Security Features
 
 - 🔒 **AWS Access Keys**: Secure credential management via GitHub secrets
-- 🛡️ **Environment Protection**: Manual approval for deployments
+- � **User Authorization**: Only specified users can run terraform apply
+- �🛡️ **Environment Protection**: Manual approval for deployments
 - 🔍 **Security Scanning**: Checkov scans for misconfigurations
 - 📝 **Audit Trail**: All actions logged with actor and reason
 - ✅ **Confirmation Required**: Must type exact confirmation words
+
+### Public Repository Security
+
+If your repository is public, the workflows include additional security measures:
+- **User Authorization**: Only users in the `ALLOWED_USERS` list can run terraform apply
+- **Environment Protection**: GitHub environments can require approval from repository owners
+- **No Secrets Exposure**: AWS credentials are stored as encrypted repository secrets
+
+To modify allowed users, edit the `ALLOWED_USERS` variable in `terraform-apply.yml`.
 
 ## Customization
 

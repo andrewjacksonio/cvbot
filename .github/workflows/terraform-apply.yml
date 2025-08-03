@@ -25,38 +25,51 @@ jobs:
     name: Terraform Apply
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    
+
     # Permissions for AWS access
     permissions:
       contents: read
-    
+
     defaults:
       run:
         working-directory: terraform
-    
+
     steps:
+      - name: Validate Actor
+        run: |
+          # Only allow specific users to run this workflow
+          ALLOWED_USERS="andrewjacksonio"
+
+          if [[ ! " $ALLOWED_USERS " =~ " ${{ github.actor }} " ]]; then
+            echo "❌ User ${{ github.actor }} is not authorized to run terraform apply"
+            echo "📝 Allowed users: $ALLOWED_USERS"
+            exit 1
+          fi
+
+          echo "✅ User ${{ github.actor }} is authorized to proceed"
+
       - name: Validate Input
         run: |
           if [ "${{ inputs.confirm_apply }}" != "apply" ]; then
             echo "❌ Confirmation input must be exactly 'apply'"
             exit 1
           fi
-      
+
       - name: Checkout Repository
         uses: actions/checkout@v4
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
-      
+
       - name: Terraform Init
         run: terraform init
       
