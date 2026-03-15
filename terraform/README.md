@@ -8,7 +8,7 @@ This Terraform setup:
 - **Creates a Bedrock Agent** with Amazon Nova Micro model
 - **Grants full Bedrock access** to your Lambda function (all services)
 - **Sets up knowledge base permissions** and S3 access
-- **Configures S3 backend** for remote state management
+- **Uses Terraform Cloud backend** for remote state and remote runs
 - **Creates comprehensive IAM policies** for all Bedrock features
 - **Enables CloudWatch logging** for debugging
 
@@ -17,29 +17,26 @@ This Terraform setup:
 1. **Terraform installed** (>= 1.0)
 2. **AWS CLI configured** with appropriate permissions
 3. **Existing Lambda function** deployed via CDK (CareerBotStack)
-4. **S3 permissions** for backend state management
+4. **Terraform Cloud access** (API token or `terraform login`) for remote runs/state
 
 ## Quick Start
 
-### Step 1: Backend Setup (First Time Only)
+### Step 1: Configure Terraform Cloud Backend (First Time Only)
 
-1. **Initialize Terraform:**
+1. **Authenticate to Terraform Cloud:**
+   - Option A (recommended): set an API token in an environment variable:
+     ```powershell
+     $env:TF_TOKEN_app_andrewjacksonio = "<YOUR_TERRAFORM_CLOUD_API_TOKEN>"
+     ```
+   - Option B: run `terraform login` and follow the prompts.
+
+2. **Initialize Terraform (this config uses the Terraform Cloud workspace `cvbot`):**
    ```powershell
    cd terraform
    terraform init
    ```
 
-2. **Create backend infrastructure:**
-   ```powershell
-   # Create S3 bucket for state management
-   terraform apply -target=aws_s3_bucket.terraform_state
-   ```
-
-3. **Re-initialize with backend:**
-   ```powershell
-   terraform init
-   # Answer "yes" when prompted to migrate state to S3
-   ```
+> Note: When using Terraform Cloud, state is stored and runs execute remotely in the workspace `cvbot` under organization `andrewjacksonio`.
 
 ### Step 2: Main Deployment
 
@@ -211,12 +208,10 @@ enable_bedrock_logging = true
 ## Commands
 
 ```powershell
-# Backend setup (first time)
+# Initialize Terraform (uses Terraform Cloud workspace "cvbot")
 terraform init
-terraform apply -target=aws_s3_bucket.terraform_state
-terraform init  # Re-initialize with backend
 
-# Regular operations
+# Regular operations (run remotely in Terraform Cloud)
 terraform plan    # Preview changes
 terraform apply   # Deploy changes
 terraform output  # View outputs
@@ -231,7 +226,7 @@ terraform refresh                       # Sync state with AWS
 ## Security Notes
 
 - **Full Bedrock Access**: Comprehensive permissions for all Bedrock services
-- **Remote State**: S3 backend with encryption
+- **Remote State**: Terraform Cloud workspace `cvbot` (state stored securely in Terraform Cloud)
 - **No Hardcoded Secrets**: Uses AWS IAM roles and data sources
 - **CloudWatch Logging**: Complete audit trail for debugging
 - **Resource Tagging**: All resources tagged for cost management

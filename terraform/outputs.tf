@@ -47,12 +47,12 @@
 #   description = "Instructions for integrating Bedrock in your Lambda code"
 #   value = <<-EOT
 #     To use Bedrock in your Lambda function, add boto3 to your requirements.txt and use:
-    
+
 #     import boto3
-    
+
 #     # Initialize Bedrock client
 #     bedrock = boto3.client('bedrock-runtime', region_name='${data.aws_region.current.name}')
-    
+
 #     # Example: Invoke Claude model
 #     response = bedrock.invoke_model(
 #         modelId='anthropic.claude-3-sonnet-20240229-v1:0',
@@ -69,7 +69,7 @@
 #             ]
 #         })
 #     )
-    
+
 #     result = json.loads(response['body'].read())
 #   EOT
 # }
