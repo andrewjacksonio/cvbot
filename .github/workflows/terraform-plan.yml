@@ -1,16 +1,18 @@
-name: Terraform Plan (Non-Main Branches)
+name: Terraform Plan (Non-Master Branches)
 
 on:
   push:
     branches-ignore:
-      - main  # HCP handles main branch via VCS integration
+      - master  # HCP handles master branch via VCS integration
     paths:
       - 'terraform/**'  # Only run when Terraform files change
+      - '.github/workflows/**'  # Also run when workflow files change
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - 'terraform/**'
+      - '.github/workflows/**'
 
 jobs:
   terraform:
