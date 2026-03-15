@@ -7,7 +7,7 @@ terraform {
       version = "~> 5.0"
     }
   }
-  
+
   # Terraform Cloud backend for remote state + remote runs
   backend "remote" {
     organization = "andrewjacksonio"
@@ -21,7 +21,7 @@ terraform {
 # Configure AWS Provider
 provider "aws" {
   region = var.aws_region
-  
+
   default_tags {
     tags = {
       Project     = "CVBot"

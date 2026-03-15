@@ -82,7 +82,7 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_trust_policy" {
 
 data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
   statement {
-    sid     = "BedrockInvokeModelStatement"
+    sid = "BedrockInvokeModelStatement"
     actions = [
       "bedrock:InvokeModel"
     ]
@@ -90,9 +90,9 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
       "arn:${data.aws_partition.current.partition}:bedrock:${data.aws_region.current.name}::foundation-model/amazon.titan-embed-text-v1",
     ]
   }
-  
+
   statement {
-    sid     = "S3VectorsPermissions"
+    sid = "S3VectorsPermissions"
     actions = [
       "s3vectors:GetIndex",
       "s3vectors:QueryVectors",
@@ -109,9 +109,9 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
       variable = "aws:ResourceAccount"
     }
   }
-  
+
   statement {
-    sid     = "S3Permissions"
+    sid = "S3Permissions"
     actions = [
       "s3:GetObject",
       "s3:ListBucket"
@@ -131,7 +131,7 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
 # resource "aws_iam_policy" "bedrock_access_policy" {
 #   name        = "${var.project_name}-bedrock-access-policy"
 #   description = "Policy for Lambda to access AWS Bedrock services"
-  
+
 #   policy = jsonencode({
 #     Version = "2012-10-17"
 #     Statement = [
@@ -158,7 +158,7 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
 #       }
 #     ]
 #   })
-  
+
 #   tags = {
 #     Name = "${var.project_name}-bedrock-access-policy"
 #   }
@@ -174,7 +174,7 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
 # resource "aws_iam_policy" "lambda_logs_policy" {
 #   name        = "${var.project_name}-lambda-logs-policy"
 #   description = "Policy for Lambda to write to CloudWatch Logs"
-  
+
 #   policy = jsonencode({
 #     Version = "2012-10-17"
 #     Statement = [
@@ -189,7 +189,7 @@ data "aws_iam_policy_document" "cvbot_knowledge_base_role_permissions" {
 #       }
 #     ]
 #   })
-  
+
 #   tags = {
 #     Name = "${var.project_name}-lambda-logs-policy"
 #   }
